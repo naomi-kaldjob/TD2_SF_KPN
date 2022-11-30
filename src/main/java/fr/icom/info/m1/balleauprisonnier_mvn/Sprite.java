@@ -17,32 +17,31 @@ class Sprite extends ImageView {
     private final Timeline shootTimeline;
     private Timeline timeline;
     public boolean isRunning;
+    Projectile projectile;
 
-    public Sprite(Image animationImage, int numCells, int numRows, Duration frameTime, String side) {
+    public Sprite(Image animationImage, int numCells, int numRows, Duration frameTime, String side,boolean visible) {
         this.numCells = numCells;
 
         double cellWidth  = 64;//animationImage.getWidth() / numCells; //64x64
         double cellHeight = 64;//animationImage.getHeight() / numRows;
 
 
-        numCellsWalk = 9;
-
-        int lineNumber = 8;
+        numCellsWalk = 9;//le nombre de fois que le joueur bouge un pied
+        int lineNumber = 8;// donne le sens du joueur vers quoi ils regardent
         if(side == "top"){
             lineNumber += 2;
         }
 
         walkClips = new Rectangle2D[numCellsWalk];
-        for (int i = 0; i < numCellsWalk; i++) {
+        for (int i = 0; i < numCellsWalk; i++) {//0
             walkClips[i] = new Rectangle2D(
-                    i * cellWidth, cellHeight*lineNumber,
+                    i*cellWidth, cellHeight*lineNumber,
                     cellWidth, cellHeight
             );
         }
-
         setImage(animationImage);
         setViewport(walkClips[0]);
-
+      
         walkTimeline = new Timeline(
                 new KeyFrame(frameTime, event -> {
                     frameCounter.set((frameCounter.get() + 1) % numCellsWalk);
@@ -80,6 +79,7 @@ class Sprite extends ImageView {
         timeline.playFromStart();
     }
 
+
     public void playShoot(){
         frameCounter.set(0);
         timeline.stop();
@@ -87,6 +87,7 @@ class Sprite extends ImageView {
         timeline.setCycleCount(numCellsShoot);
         timeline.setOnFinished(e -> playContinuously());
         timeline.playFromStart();
+     
     }
 
     public void stop() {
@@ -94,4 +95,10 @@ class Sprite extends ImageView {
         setViewport(walkClips[frameCounter.get()]);
         walkTimeline.stop();
     }
-}
+   // public void shoot() {
+    	
+   // }
+    }
+
+
+
